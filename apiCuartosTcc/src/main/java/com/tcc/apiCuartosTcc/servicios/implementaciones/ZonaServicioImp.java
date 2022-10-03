@@ -74,7 +74,7 @@ public class ZonaServicioImp implements ServicioGenerico<Zona> {
     public Boolean borrar(Integer id) throws Exception {
         try{
 
-    if(zonaRepositorio.existsById(id)){0
+    if(zonaRepositorio.existsById(id)){
         zonaRepositorio.deleteById(id);
         return true;
     } else{
