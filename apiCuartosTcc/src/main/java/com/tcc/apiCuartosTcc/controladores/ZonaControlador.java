@@ -15,6 +15,7 @@ public class ZonaControlador {
     ZonaServicioImp zonaServicio;
 
 
+
     @PostMapping
     public ResponseEntity<?> registrar(@RequestBody Zona zona){
 
@@ -48,5 +49,57 @@ public class ZonaControlador {
         }
 
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<?> buscarPorId(@PathVariable Integer id){
+
+        try{
+
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(zonaServicio.buscarPoRId(id));
+
+        } catch (Exception error){
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("{mensaje:Datos no encontrados.}");
+        }
+
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> actualizar(@PathVariable Integer id,@RequestBody Zona zona){
+
+        try{
+
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(zonaServicio.actualizar(id,zona));
+
+        } catch (Exception error){
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("{mensaje:No se pudo actualizar}");
+        }
+
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> borrar(@PathVariable Integer id){
+
+        try{
+
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(zonaServicio.borrar(id));
+
+        } catch (Exception error){
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body("{mensaje:No se pudo borrar}");
+        }
+
+    }
+
+
 
 }

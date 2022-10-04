@@ -18,16 +18,16 @@ public class Mercancia implements Serializable {
     @Column(name = "volumen")
     private Double volumen;
 
-    @Column(name = "nombre")
+    @Column(name = "nombre",length = 40)
     private String nombre;
 
-    @Column(name = "tipo_remitente")
+    @Column(name = "tipo_remitente",length = 25)
     private String tipoRemitente;
-    @Column(name = "id_remitente")
+    @Column(name = "id_remitente",length = 30)
     private String idRemitente;
-    @Column(name = "nombre_remitente")
+    @Column(name = "nombre_remitente",length = 40)
     private String nombreRemitente;
-    @Column(name = "departamento_remitente")
+    @Column(name = "departamento_remitente",length = 35)
     private String deptoRemitente;
 
     @Column(name = "municipio_remitente")

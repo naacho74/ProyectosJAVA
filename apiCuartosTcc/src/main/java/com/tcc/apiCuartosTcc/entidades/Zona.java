@@ -20,7 +20,7 @@ public class Zona implements Serializable {
     @Column(name = "id")
     private Integer id;
 
-    @Column(name = "nombre")
+    @Column(name = "nombre",length = 30 )
     private String nombre;
     @Column(name = "capacidad")
     private Double capacidad;
