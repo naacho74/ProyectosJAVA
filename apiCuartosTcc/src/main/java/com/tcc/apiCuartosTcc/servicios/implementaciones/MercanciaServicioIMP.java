@@ -4,6 +4,7 @@ package com.tcc.apiCuartosTcc.servicios.implementaciones;
 import com.tcc.apiCuartosTcc.entidades.Mercancia;
 import com.tcc.apiCuartosTcc.entidades.Zona;
 import com.tcc.apiCuartosTcc.repocitorios.MercanciaRepocitorio;
+import com.tcc.apiCuartosTcc.repocitorios.ZonaRepositorio;
 import com.tcc.apiCuartosTcc.servicios.ServicioGenerico;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,9 @@ public class MercanciaServicioIMP implements ServicioGenerico<Mercancia>  {
 
     @Autowired
     MercanciaRepocitorio mercanciaRepocitorio;
+
+    @Autowired
+    ZonaRepositorio zonaRepositorio;
 
     @Override
     public List<Mercancia> buscarTodos() throws Exception {
@@ -55,9 +59,21 @@ public class MercanciaServicioIMP implements ServicioGenerico<Mercancia>  {
     public Mercancia registrar(Mercancia tabla) throws Exception {
 
         try{
-            tabla=mercanciaRepocitorio.save(tabla);
 
-            return  tabla;
+           Optional<Zona> zonaAsociadaAMercancia=zonaRepositorio.findById(tabla.getZona().getId());
+          double capacidadDisponibleZona=zonaAsociadaAMercancia.get().getDisponible();
+          double capacidadOcupadaMercancia = tabla.getVolumen();
+          double capacidadRestante=capacidadDisponibleZona-capacidadOcupadaMercancia;
+
+          if (capacidadRestante>=0){
+             zonaAsociadaAMercancia.get().setDisponible(capacidadRestante);
+             zonaRepositorio.save(zonaAsociadaAMercancia.get());
+              tabla=mercanciaRepocitorio.save(tabla);
+              return tabla;
+          } else{
+
+           throw new Exception("no tenemos capacidad para esta mercancia");
+          }
 
         }catch(Exception error){
             throw  new Exception(error.getMessage());
@@ -83,9 +99,19 @@ public class MercanciaServicioIMP implements ServicioGenerico<Mercancia>  {
     public Boolean borrar(Integer id) throws Exception {
         try{
 
-            if(mercanciaRepocitorio.existsById(id)){
-                mercanciaRepocitorio.deleteById(id);
-                return true;
+            if(mercanciaRepocitorio.existsById(id))
+            {
+            Optional<Mercancia> mercanciaARetirar=mercanciaRepocitorio.findById(id);
+            Optional<Zona> zonaAsociadaAMercancia=zonaRepositorio.findById(mercanciaARetirar.get().getZona().getId());
+
+            Double capacidadOcupadaPorMercancia=mercanciaARetirar.get().getVolumen();
+            Double capacidadDisponible=zonaAsociadaAMercancia.get().getDisponible();
+            Double capacidadLiberada=capacidadDisponible+capacidadOcupadaPorMercancia;
+            zonaAsociadaAMercancia.get().setDisponible(capacidadDisponible);
+            zonaRepositorio.save(zonaAsociadaAMercancia.get());
+
+            mercanciaRepocitorio.deleteById(id);
+               return true;
             } else{
 
                 throw  new Exception();

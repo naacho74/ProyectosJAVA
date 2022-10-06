@@ -2,6 +2,9 @@ package com.tcc.apiCuartosTcc;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
 public class ApiCuartosTccApplication {
@@ -9,6 +12,15 @@ public class ApiCuartosTccApplication {
 	public static void main(String[] args) {
 
 		SpringApplication.run(ApiCuartosTccApplication.class, args);
+	}
+	@Bean
+	public WebMvcConfigurer corsConfigurer() {
+		return new WebMvcConfigurer() {
+			@Override
+			public void addCorsMappings(CorsRegistry registry) {
+				registry.addMapping("/**").allowedOrigins("*");
+			}
+		};
 	}
 
 }
